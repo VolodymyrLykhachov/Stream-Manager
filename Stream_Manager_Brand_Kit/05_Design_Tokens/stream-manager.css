@@ -1,0 +1,14 @@
+/* Stream Manager | Brand tokens */
+:root {
+  --sm-ink: #071320;
+  --sm-navy: #0B1F33;
+  --sm-deep: #102C46;
+  --sm-blue: #238DF4;
+  --sm-cyan: #38CBF4;
+  --sm-teal: #31E3BC;
+  --sm-fog: #ECF8FD;
+  --sm-muted: #8CA8BA;
+  --sm-font: 'Lato', 'Inter', system-ui, sans-serif;
+  --sm-radius-card: 20px;
+  --sm-radius-control: 12px;
+}

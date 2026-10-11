@@ -1,0 +1,41 @@
+name: Stream Manager
+version: "1.0.0"
+slug: stream_manager
+description: >-
+  Smart ONVIF proxy for Home Assistant. Publish cameras, RTSP URLs, and
+  existing ONVIF streams as one stable device, and switch the picture
+  from entity state without changing the address.
+url: https://github.com/zodyking/Stream-Manager
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - armhf
+init: false
+startup: application
+boot: auto
+host_network: true
+homeassistant_api: true
+hassio_api: true
+hassio_role: default
+ingress: true
+ingress_port: 8099
+ingress_entry: /
+panel_icon: mdi:cctv
+panel_title: Stream Manager
+panel_admin: true
+privileged:
+  - NET_ADMIN
+  - NET_RAW
+options:
+  ui_port: 8099
+  onvif_port: 8080
+  rtsp_port: 8554
+  go2rtc_api_port: 19841
+  poll_seconds: 5
+schema:
+  ui_port: "int(1,65535)"
+  onvif_port: "int(1,65535)"
+  rtsp_port: "int(1,65535)"
+  go2rtc_api_port: "int(1,65535)"
+  poll_seconds: "int(2,120)"

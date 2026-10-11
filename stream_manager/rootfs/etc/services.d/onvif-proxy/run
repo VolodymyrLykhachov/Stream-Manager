@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -x /command/with-contenv ]; then
+  exec /command/with-contenv /app/run.sh
+fi
+if [ -x /usr/bin/with-contenv ]; then
+  exec /usr/bin/with-contenv /app/run.sh
+fi
+exec /app/run.sh

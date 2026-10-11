@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -x /run/s6/basedir/bin/halt ]; then
+  exec /run/s6/basedir/bin/halt
+fi
+exit 0

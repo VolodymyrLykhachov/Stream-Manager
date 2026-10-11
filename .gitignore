@@ -1,0 +1,8 @@
+Agent-Files/
+data/
+bin/
+.venv/
+__pycache__/
+*.pyc
+config.local.json
+*.log

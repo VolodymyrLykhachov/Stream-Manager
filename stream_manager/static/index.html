@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Stream Manager</title>
+  <link rel="icon" href="__PREFIX__/static/brand/favicon.ico" sizes="any">
+  <link rel="icon" href="__PREFIX__/static/brand/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="__PREFIX__/static/app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav id="nav" aria-label="Primary"></nav>
+    <button type="button" class="backdrop" id="backdrop" hidden aria-label="Close menu"></button>
+    <div class="workspace">
+      <div class="mobile-bar">
+        <button type="button" class="icon-btn" id="menu-btn" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
+        <img class="mobile-mark brand-on-dark" src="__PREFIX__/static/brand/stream-manager-app-icon-dark.svg" alt="">
+        <img class="mobile-mark brand-on-light" src="__PREFIX__/static/brand/stream-manager-app-icon-light.svg" alt="">
+        <span class="mobile-brand">Stream Manager</span>
+      </div>
+      <main id="main" tabindex="-1">
+        <p class="loading">Loading…</p>
+      </main>
+    </div>
+  </div>
+  <script>window.INGRESS_PATH = "__INGRESS__";</script>
+  <script src="__PREFIX__/static/app.js" defer></script>
+  <noscript><p class="noscript">This page needs JavaScript to edit cameras.</p></noscript>
+</body>
+</html>

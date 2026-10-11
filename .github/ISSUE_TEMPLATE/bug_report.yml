@@ -1,0 +1,76 @@
+name: Bug report
+description: Report something Stream Manager did that you did not expect.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Leave out passwords, long-lived tokens, and stream URLs that contain credentials.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what Stream Manager did instead.
+      placeholder: The virtual camera was announced on the wrong network.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add a camera with an RTSP source.
+        2. Choose the other network interface.
+        3. Open the status page.
+    validations:
+      required: true
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.10.0"
+    validations:
+      required: true
+  - type: input
+    id: addon-version
+    attributes:
+      label: Stream Manager version
+      description: Shown on the add-on page.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: arch
+    attributes:
+      label: Where it is running
+      options:
+        - Home Assistant aarch64
+        - Home Assistant amd64
+        - Home Assistant armv7
+        - Home Assistant armhf
+        - Local Windows or macOS
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Source type
+      options:
+        - RTSP URL
+        - Home Assistant camera
+        - Existing ONVIF device
+        - Still image
+        - More than one, with rules
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Add-on log or the local server log, with secrets removed.
+      render: text
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else

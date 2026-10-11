@@ -1,0 +1,10 @@
+data
+bin
+.venv
+**/__pycache__
+**/*.pyc
+.git
+Agent-Files
+tests
+config.local.json
+*.log

@@ -1,0 +1,18 @@
+configuration:
+  ui_port:
+    name: UI port
+    description: >-
+      Web UI port. Ingress expects 8099. Change this only if you also
+      change ingress_port in config.yaml.
+  onvif_port:
+    name: ONVIF port
+    description: HTTP port for ONVIF device and media services on the host.
+  rtsp_port:
+    name: RTSP port
+    description: Stable RTSP port. The stream name is the virtual camera id.
+  go2rtc_api_port:
+    name: Engine API port
+    description: Localhost-only control port for the bundled go2rtc engine.
+  poll_seconds:
+    name: State poll interval
+    description: Seconds between Home Assistant state polls.

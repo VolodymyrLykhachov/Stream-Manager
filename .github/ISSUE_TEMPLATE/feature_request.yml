@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest something Stream Manager should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use a bug report when something that already exists is broken.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who is stuck, and what they are trying to do.
+      placeholder: A client on the guest network cannot see a camera that only exists on the camera network.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen
+      description: What the panel, the ONVIF device, or the stream should do.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Panel
+        - ONVIF or discovery
+        - Stream output
+        - Source switching
+        - Install and packaging
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Leave out credentials.
