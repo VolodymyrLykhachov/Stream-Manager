@@ -16,6 +16,22 @@ from .onvif_soap import dispatch
 
 STATIC = Path(__file__).resolve().parent.parent / "static"
 _INGRESS = re.compile(r"^/[A-Za-z0-9_./-]*$")
+_EXTRA_SLASHES = re.compile(r"/{2,}")
+
+
+@web.middleware
+async def collapse_slashes(request: web.Request, handler):
+    """Ingress joins its prefix with another slash, so the panel arrives as ///."""
+    path = request.rel_url.path
+    if "//" not in path:
+        return await handler(request)
+    cleaned = _EXTRA_SLASHES.sub("/", path) or "/"
+    cloned = request.clone(rel_url=request.rel_url.with_path(cleaned))
+    match_info = await request.app.router.resolve(cloned)
+    match_info.add_app(request.app)
+    match_info.freeze()
+    cloned._match_info = match_info
+    return await match_info.handler(cloned)
 
 
 def _ingress_prefix(request: web.Request) -> str:
@@ -40,8 +56,9 @@ def _local(request: web.Request) -> bool:
 
 async def index(request: web.Request) -> web.Response:
     prefix = _ingress_prefix(request)
+    root = f"{prefix}/" if prefix else ""
     html = (STATIC / "index.html").read_text(encoding="utf-8")
-    html = html.replace("__INGRESS__", prefix).replace("__PREFIX__", prefix)
+    html = html.replace("__INGRESS__", prefix).replace("__PREFIX__/", root)
     return web.Response(text=html, content_type="text/html")
 
 
@@ -372,6 +389,7 @@ async def mjpeg(request: web.Request) -> web.Response:
 
 
 def setup_routes(app: web.Application) -> None:
+    app.middlewares.append(collapse_slashes)
     app.router.add_get("/", index)
     app.router.add_get("/static/{name:.*}", static_file)
     app.router.add_get("/api/status", status)

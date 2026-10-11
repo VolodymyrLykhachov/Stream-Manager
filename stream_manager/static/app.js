@@ -1,5 +1,10 @@
 (function () {
   const base = window.INGRESS_PATH || "";
+
+  function rooted(path) {
+    if (base) return base + path;
+    return String(path || "").replace(/^\//, "");
+  }
   const main = document.getElementById("main");
   const nav = document.getElementById("nav");
   const menuBtn = document.getElementById("menu-btn");
@@ -41,7 +46,7 @@
   }
 
   async function api(path, options) {
-    const response = await fetch(base + path, Object.assign({
+    const response = await fetch(rooted(path), Object.assign({
       headers: { "Content-Type": "application/json" },
     }, options || {}));
     const text = await response.text();
@@ -105,8 +110,8 @@
   function renderNav(cameras, current) {
     const overviewOn = current.name === "overview";
     let html = '<div class="nav-brand">' +
-      '<img class="brand-lockup brand-on-dark" src="' + base + '/static/brand/stream-manager-horizontal-dark.svg" alt="Stream Manager">' +
-      '<img class="brand-lockup brand-on-light" src="' + base + '/static/brand/stream-manager-horizontal-light.svg" alt="">' +
+      '<img class="brand-lockup brand-on-dark" src="' + rooted("/static/brand/stream-manager-horizontal-dark.svg") + '" alt="Stream Manager">' +
+      '<img class="brand-lockup brand-on-light" src="' + rooted("/static/brand/stream-manager-horizontal-light.svg") + '" alt="">' +
       "</div>";
     html += '<a class="nav-link" href="#/"' + (overviewOn ? ' aria-current="page"' : "") + '><span class="nav-icon">' + iconOverview + '</span><span class="label">Overview</span></a>';
     if (cameras && cameras.length) {
@@ -576,7 +581,7 @@
           if (!input.files || !input.files[0]) continue;
           const body = new FormData();
           body.append("file", input.files[0]);
-          const response = await fetch(base + "/api/images", { method: "POST", body: body });
+          const response = await fetch(rooted("/api/images"), { method: "POST", body: body });
           const payload = await response.json();
           if (!response.ok) {
             error.hidden = false;
