@@ -1,0 +1,27 @@
+[Unit]
+Description=Stream Manager ONVIF proxy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=stream-manager
+Group=stream-manager
+WorkingDirectory=/opt/stream-manager/src/stream_manager
+Environment=HASP_DATA_DIR=/var/lib/stream-manager
+Environment=GO2RTC_BIN=/usr/local/bin/go2rtc
+Environment=HASP_DEV=0
+EnvironmentFile=-/etc/default/stream-manager
+ExecStart=/opt/stream-manager/venv/bin/python -m onvif_proxy
+Restart=on-failure
+RestartSec=5
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_PACKET
+
+[Install]
+WantedBy=multi-user.target

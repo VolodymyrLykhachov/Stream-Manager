@@ -16,7 +16,7 @@ Stream Manager is an independent project. It is not affiliated with or endorsed 
 | `go2rtc_api_port` | `19841` | Localhost control port for the engine. |
 | `poll_seconds` | `5` | How often entity states are polled. |
 
-Cameras, rules, and ONVIF passwords are stored in `/data/cameras.json`, not in the options form.
+Cameras, rules, and ONVIF passwords are stored in `cameras.json` under the configured data directory (the add-on uses `/data`).
 
 Leave the camera username and password empty for an open device. When they are set, stream and profile calls require a UsernameToken or HTTP Digest. Time and capabilities stay open.
 
@@ -28,6 +28,44 @@ Each camera chooses a host interface. Discovery and the addresses shown to clien
 - RTSP: `rtsp://<listen-ip>:8554/<id>`
 
 The published stream is one ONVIF Profile S profile, token `main`. Resolution, frame rate, bitrate, H.264 profile, and GOP are encoded into that stream and reported over ONVIF.
+
+## Install in a Proxmox LXC
+
+The installer runs **inside an existing Debian 12 or newer LXC container** as root. It installs the application and its Python dependencies, ffmpeg, go2rtc, and a systemd service. It does not create or modify the container on the Proxmox host.
+
+For example, from the Proxmox host, enter your running container (replace `106` with its CT ID):
+
+```sh
+pct enter 106
+```
+
+Then run inside the container:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/VolodymyrLykhachov/Stream-Manager/main/stream_manager/install-lxc.sh | sh
+```
+
+The service starts automatically and stores cameras, rules, and other state in `/var/lib/stream-manager`. The installer creates `/etc/default/stream-manager` for ports and optional Home Assistant settings. Edit that file to set `HASP_HA_URL` and `HASP_HA_TOKEN`, then restart the service:
+
+```sh
+nano /etc/default/stream-manager
+systemctl restart stream-manager
+```
+
+Open `http://<LXC-IP>:8099/`. Allow TCP ports `8099` (panel), `8080` (ONVIF), and `8554` (RTSP) through any Proxmox firewall. The go2rtc control port `19841` is bound to localhost only.
+
+WS-Discovery uses UDP multicast port `3702`; the LXC bridge and any firewalls between clients and the container must pass multicast. This does not work across routed networks without a multicast relay.
+
+The service requests `CAP_NET_ADMIN` and `CAP_NET_RAW` for virtual camera addresses, macvlan interfaces, and ARP announcements. The container's Proxmox configuration must permit these capabilities and networking operations for those features. If it does not, the UI and streams can still run, but virtual camera address assignment and discovery announcements may be limited. Keep the LXC attached to the LAN bridge from which clients should discover the cameras.
+
+Check service health and logs with:
+
+```sh
+systemctl status stream-manager
+journalctl -u stream-manager -f
+```
+
+To update, rerun the installer. It fast-forwards the checkout and restarts the service without replacing `/var/lib/stream-manager` or an existing `/etc/default/stream-manager`.
 
 ## Run locally
 

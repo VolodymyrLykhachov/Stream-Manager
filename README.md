@@ -24,6 +24,8 @@ Stream Manager publishes a Home Assistant camera, an RTSP URL, an existing ONVIF
 
 The panel is this add-on. go2rtc 1.9.14 is only the local RTSP engine. There is no Profile T, PTZ, events, or multicast RTP.
 
+For a standalone Debian LXC deployment in Proxmox, see the [LXC installation guide](stream_manager/README.md#install-in-a-proxmox-lxc).
+
 Stream Manager is an independent project. It is not affiliated with or endorsed by Home Assistant, the Open Home Foundation, or ONVIF.
 
 ## Install
