@@ -36,7 +36,7 @@ if [ -d "$SOURCE_DIR/.git" ]; then
     fail "$SOURCE_DIR has local changes; save them before updating."
   fi
   git -C "$SOURCE_DIR" fetch --depth 1 origin "$BRANCH"
-  git -C "$SOURCE_DIR" merge --ff-only FETCH_HEAD
+  git -C "$SOURCE_DIR" switch --detach FETCH_HEAD
 elif [ -e "$SOURCE_DIR" ]; then
   fail "$SOURCE_DIR exists and is not a Git checkout; move it before installing."
 else
