@@ -32,7 +32,7 @@ Stream Manager is an independent project. It is not affiliated with or endorsed 
 
 In **Settings → Apps → Add-on store → ⋮ → Repositories**, add:
 
-`https://github.com/zodyking/Stream-Manager`
+`https://github.com/VolodymyrLykhachov/Stream-Manager`
 
 Install **Stream Manager** and open its panel. The add-on uses the host network so discovery can answer on the interface you select.
 

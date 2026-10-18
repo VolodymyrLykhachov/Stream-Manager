@@ -133,14 +133,18 @@ class StreamManagerTests(unittest.IsolatedAsyncioTestCase):
         streams, engine = manager(Path("."))
         await streams.sync([cam], {}, FakeHa(Playback(None, None)))
         published = engine.streams["gate"]
-        self.assertIn("-localaddr 192.0.2.10 -i {input}", "\n".join(engine.templates.values()))
+        self.assertIn("-rtsp_transport udp -localaddr 192.0.2.10 -i {input}", "\n".join(engine.templates.values()))
         self.assertNotRegex(published, r"\s")
         self.assertTrue(published.startswith("ffmpeg:rtsp://camera.example/gate#video="))
         self.assertEqual(streams.runtime["gate"]["rtsp_url"], "rtsp://192.0.2.50:8554/gate")
 
     def test_host_route_does_not_bind_a_local_address(self):
         src = with_source_bind("ffmpeg:rtsp://camera.example/live#video=-c:v libx264", "")
-        self.assertNotIn("localaddr", src)
+        self.assertIn("#input=", src)
+        template = src.split("#input=", 1)[1].split("#", 1)[0]
+        body = ffmpeg_templates()[template]
+        self.assertIn("-rtsp_transport udp", body)
+        self.assertNotIn("localaddr", body)
 
     async def test_cycle_runs_until_a_rule_matches(self):
         cam = camera_from_dict(

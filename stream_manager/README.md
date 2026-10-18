@@ -29,6 +29,8 @@ Each camera chooses a host interface. Discovery and the addresses shown to clien
 
 The published stream is one ONVIF Profile S profile, token `main`. Resolution, frame rate, bitrate, H.264 profile, and GOP are encoded into that stream and reported over ONVIF.
 
+RTSP sources are pulled using UDP transport. Ensure UDP media traffic is permitted between the host and each source camera.
+
 ## Install in a Proxmox LXC
 
 The installer runs **inside an existing Debian 12 or newer LXC container** as root. It installs the application and its Python dependencies, ffmpeg, go2rtc, and a systemd service. It does not create or modify the container on the Proxmox host.

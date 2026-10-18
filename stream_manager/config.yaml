@@ -1,11 +1,11 @@
 name: Stream Manager
-version: "1.0.18"
+version: "1.0.19"
 slug: stream_manager
 description: >-
   Smart ONVIF proxy for Home Assistant. Publish cameras, RTSP URLs, and
   existing ONVIF streams as one stable device, and switch the picture
   from entity state without changing the address.
-url: https://github.com/zodyking/Stream-Manager
+url: https://github.com/VolodymyrLykhachov/Stream-Manager
 arch:
   - aarch64
   - amd64

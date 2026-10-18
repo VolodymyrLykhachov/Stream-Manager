@@ -54,17 +54,19 @@ def ffmpeg_media(target: str) -> str:
 
 def with_source_bind(src: str, source_ip: str) -> str:
     """Open RTSP and remote images from the listening address."""
-    if not source_ip or not src.startswith("ffmpeg:"):
+    if not src.startswith("ffmpeg:"):
         return src
     target = src[len("ffmpeg:") :].split("#", 1)[0]
     remote_http = target.startswith(("http://", "https://")) and "127.0.0.1" not in target and "localhost" not in target
-    if not (target.startswith(("rtsp://", "rtsps://")) or remote_http):
+    is_rtsp = target.startswith(("rtsp://", "rtsps://"))
+    if not is_rtsp and (not source_ip or not remote_http):
         return src
-    if target.startswith(("rtsp://", "rtsps://")):
+    if is_rtsp:
+        localaddr = f"-localaddr {source_ip} " if source_ip else ""
         body = (
             "-fflags nobuffer -flags low_delay -timeout {timeout} "
-            "-user_agent go2rtc/ffmpeg -rtsp_flags prefer_tcp "
-            f"-localaddr {source_ip} -i {{input}}"
+            "-user_agent go2rtc/ffmpeg -rtsp_transport udp "
+            f"{localaddr}-i {{input}}"
         )
     else:
         body = f"-fflags nobuffer -flags low_delay -localaddr {source_ip} -i {{input}}"
