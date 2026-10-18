@@ -91,7 +91,7 @@ def with_output(src: str, output: OutputSettings, *, audio: bool = False) -> str
         f" -g {output.gov_length}"
         f" -r {output.framerate}"
         f" -profile:v {profile}"
-        " -level:v 4.1 -preset:v superfast -tune:v zerolatency -pix_fmt:v yuv420p"
+        " -preset:v superfast -tune:v zerolatency -pix_fmt:v yuv420p"
         " -bf 0 -x264-params sliced-threads=0:slices=1:repeat-headers=1:scenecut=0"
     )
     suffix = f"#video={video}#width={output.width}#height={output.height}#bitrate={output.bitrate_kbps}k"
