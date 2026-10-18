@@ -21,8 +21,10 @@ PRE_AUTH = {
     "GetWsdlUrl",
 }
 
-PROFILE_TOKEN = "main"
-SUB_TOKEN = "sub"
+PROFILE_TOKEN = "MediaProfile000"
+SUB_TOKEN = "MediaProfile001"
+VIDEO_SOURCE_TOKEN = "000"
+VIDEO_SOURCE_CONFIGURATION_TOKEN = "000"
 FIRMWARE = "1.0.18"
 
 
@@ -168,8 +170,8 @@ def _media_uri(uri: str) -> str:
 def _source_configuration(camera: Camera) -> str:
     output = camera.output
     return (
-        '<tt:Name>VideoSource</tt:Name><tt:UseCount>2</tt:UseCount>'
-        "<tt:SourceToken>vs_1</tt:SourceToken>"
+        '<tt:Name>VideoSourceConfig_Channel1</tt:Name><tt:UseCount>2</tt:UseCount>'
+        f"<tt:SourceToken>{VIDEO_SOURCE_TOKEN}</tt:SourceToken>"
         f'<tt:Bounds x="0" y="0" width="{output.width}" height="{output.height}"/>'
     )
 
@@ -215,6 +217,7 @@ def _named_config(operation: str, token: str, body: str) -> str:
 
 def _profile_xml(camera: Camera, token: str = PROFILE_TOKEN, tag: str = "trt:Profiles", *, audio: bool = False) -> str:
     label = "MainStream" if token == PROFILE_TOKEN else "SubStream"
+    profile_name = f"MediaProfile_Channel1_{label}"
     audio_xml = ""
     if audio:
         audio_xml = (
@@ -227,8 +230,8 @@ def _profile_xml(camera: Camera, token: str = PROFILE_TOKEN, tag: str = "trt:Pro
         )
     return (
         f'<{tag} token="{token}" fixed="true">'
-        f"<tt:Name>{label}</tt:Name>"
-        '<tt:VideoSourceConfiguration token="vsc_1">'
+        f"<tt:Name>{profile_name}</tt:Name>"
+        f'<tt:VideoSourceConfiguration token="{VIDEO_SOURCE_CONFIGURATION_TOKEN}">'
         + _source_configuration(camera)
         + "</tt:VideoSourceConfiguration>"
         '<tt:VideoEncoderConfiguration token="vec_1">'
@@ -374,13 +377,13 @@ def build_operation(operation: str, camera: Camera, endpoints: Endpoints, xml: s
     if operation == "GetVideoSources":
         output = camera.output
         return envelope(
-            '<trt:GetVideoSourcesResponse><trt:VideoSources token="vs_1">'
+            f'<trt:GetVideoSourcesResponse><trt:VideoSources token="{VIDEO_SOURCE_TOKEN}">'
             f"<tt:Framerate>{output.framerate}</tt:Framerate>"
             f"<tt:Resolution><tt:Width>{output.width}</tt:Width><tt:Height>{output.height}</tt:Height></tt:Resolution>"
             "</trt:VideoSources></trt:GetVideoSourcesResponse>"
         )
     if operation in {"GetVideoSourceConfigurations", "GetVideoSourceConfiguration"}:
-        return _named_config(operation, "vsc_1", _source_configuration(camera))
+        return _named_config(operation, VIDEO_SOURCE_CONFIGURATION_TOKEN, _source_configuration(camera))
     if operation in {"GetVideoEncoderConfigurations", "GetVideoEncoderConfiguration", "GetCompatibleVideoEncoderConfigurations"}:
         reported = "GetVideoEncoderConfigurations" if operation == "GetCompatibleVideoEncoderConfigurations" else operation
         return _named_config(reported, "vec_1", _encoder_configuration(camera))

@@ -28,7 +28,7 @@ Each camera chooses a host interface. Discovery and the addresses shown to clien
 - ONVIF: `http://<listen-ip>:8080/onvif/<id>/device_service`
 - RTSP: `rtsp://<listen-ip>:8554/<id>`
 
-The published stream is one ONVIF Profile S profile, token `main`. Resolution, frame rate, bitrate, H.264 profile, and GOP are encoded into that stream and reported over ONVIF.
+The ONVIF media service advertises two profiles (`MediaProfile000` and `MediaProfile001`) with Dahua-style channel names. Both profiles currently use the same published RTSP stream; resolution, frame rate, bitrate, H.264 profile, and GOP are reported from the configured output. Video-source bounds reflect that configured resolution.
 
 RTSP sources are pulled using UDP transport. Ensure UDP media traffic is permitted between the host and each source camera.
 

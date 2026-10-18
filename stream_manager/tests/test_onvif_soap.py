@@ -75,8 +75,15 @@ class OnvifSoapTests(unittest.TestCase):
             ENDPOINTS,
             envelope("<trt:GetProfiles/>"),
         )
-        self.assertIn('token="main"', profiles_xml)
+        self.assertIn('token="MediaProfile000"', profiles_xml)
+        self.assertIn('token="MediaProfile001"', profiles_xml)
+        self.assertIn("<tt:Name>MediaProfile_Channel1_MainStream</tt:Name>", profiles_xml)
+        self.assertIn("<tt:Name>MediaProfile_Channel1_SubStream</tt:Name>", profiles_xml)
+        self.assertIn('<tt:VideoSourceConfiguration token="000">', profiles_xml)
+        self.assertIn("<tt:Name>VideoSourceConfig_Channel1</tt:Name>", profiles_xml)
+        self.assertIn("<tt:SourceToken>000</tt:SourceToken>", profiles_xml)
         self.assertIn("<tt:Width>1920</tt:Width>", profiles_xml)
+        self.assertIn('<tt:Bounds x="0" y="0" width="1920" height="1080"/>', profiles_xml)
         self.assertIn("<tt:H264Profile>Main</tt:H264Profile>", profiles_xml)
         self.assertIn("<tt:FrameRateLimit>15</tt:FrameRateLimit>", profiles_xml)
         self.assertIn("<tt:BitrateLimit>2048</tt:BitrateLimit>", profiles_xml)
@@ -138,6 +145,7 @@ class OnvifSoapTests(unittest.TestCase):
         self.assertIn("<tt:BitrateLimit>1024</tt:BitrateLimit>", profiles_xml)
         self.assertIn("<tt:GovLength>20</tt:GovLength>", profiles_xml)
         self.assertIn("<tt:H264Profile>High</tt:H264Profile>", profiles_xml)
+        self.assertIn('<tt:Bounds x="0" y="0" width="1280" height="720"/>', profiles_xml)
         self.assertIn('fixed="true"', profiles_xml)
 
     def test_dispatch_round_trip(self):
@@ -208,10 +216,25 @@ class OnvifSoapTests(unittest.TestCase):
         cam = camera()
         cam.mac = "02:11:22:33:44:55"
         profiles_xml = build_operation("GetProfiles", cam, ENDPOINTS, envelope("<trt:GetProfiles/>"))
-        self.assertIn('token="main"', profiles_xml)
-        self.assertIn('token="sub"', profiles_xml)
-        sub = build_operation("GetProfile", cam, ENDPOINTS, envelope("<trt:GetProfile><trt:ProfileToken>sub</trt:ProfileToken></trt:GetProfile>"))
-        self.assertIn('<trt:Profile token="sub"', sub)
+        self.assertEqual(profiles_xml.count("<trt:Profiles "), 2)
+        self.assertIn('token="MediaProfile000"', profiles_xml)
+        self.assertIn('token="MediaProfile001"', profiles_xml)
+        sub = build_operation(
+            "GetProfile",
+            cam,
+            ENDPOINTS,
+            envelope(
+                "<trt:GetProfile><trt:ProfileToken>MediaProfile001</trt:ProfileToken></trt:GetProfile>"
+            ),
+        )
+        self.assertIn('<trt:Profile token="MediaProfile001"', sub)
+        self.assertIn("<tt:Name>MediaProfile_Channel1_SubStream</tt:Name>", sub)
+        sources = build_operation("GetVideoSources", cam, ENDPOINTS, "")
+        self.assertIn('<trt:VideoSources token="000">', sources)
+        source_config = build_operation(
+            "GetVideoSourceConfiguration", cam, ENDPOINTS, ""
+        )
+        self.assertIn('<trt:Configurations token="000">', source_config)
         nic = build_operation("GetNetworkInterfaces", cam, ENDPOINTS, "")
         self.assertIn("<tt:HwAddress>02:11:22:33:44:55</tt:HwAddress>", nic)
         info = build_operation("GetDeviceInformation", cam, ENDPOINTS, "")
