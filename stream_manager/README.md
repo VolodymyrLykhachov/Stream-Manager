@@ -15,6 +15,7 @@ Stream Manager is an independent project. It is not affiliated with or endorsed 
 | `rtsp_port` | `8554` | Stable RTSP port. The path is the camera id. |
 | `go2rtc_api_port` | `19841` | Localhost control port for the engine. |
 | `poll_seconds` | `5` | How often entity states are polled. |
+| `log_level` | `info` | Log verbosity: `debug`, `info`, `warning`, or `error`. Set to `debug` when collecting diagnostics. |
 
 Cameras, rules, and ONVIF passwords are stored in `cameras.json` under the configured data directory (the add-on uses `/data`).
 
@@ -30,6 +31,8 @@ Each camera chooses a host interface. Discovery and the addresses shown to clien
 The published stream is one ONVIF Profile S profile, token `main`. Resolution, frame rate, bitrate, H.264 profile, and GOP are encoded into that stream and reported over ONVIF.
 
 RTSP sources are pulled using UDP transport. Ensure UDP media traffic is permitted between the host and each source camera.
+
+For troubleshooting, set the add-on's `log_level` option to `debug`, save, and restart the add-on. Reproduce the issue and share the relevant log lines, including the go2rtc and stream-test entries. Logs redact URL credentials; still review logs before sharing them.
 
 ## Install in a Proxmox LXC
 

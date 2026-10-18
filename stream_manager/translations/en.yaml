@@ -16,3 +16,8 @@ configuration:
   poll_seconds:
     name: State poll interval
     description: Seconds between Home Assistant state polls.
+  log_level:
+    name: Log level
+    description: >-
+      Log verbosity. Use debug when collecting troubleshooting details, then
+      return to info for normal operation.

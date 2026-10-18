@@ -358,6 +358,13 @@ class StreamManager:
             self.runtime[camera_id] = record
             return
         if self._applied.get(camera_id) != src:
+            log.info(
+                "publishing camera %s source_id=%s source_type=%s reason=%s",
+                camera_id,
+                record.get("source_id") or "none",
+                record.get("source_type") or "none",
+                record.get("reason") or "unknown",
+            )
             engine_error = await asyncio.to_thread(self.engine.upsert, camera_id, src)
             if engine_error:
                 record["engine_error"] = engine_error

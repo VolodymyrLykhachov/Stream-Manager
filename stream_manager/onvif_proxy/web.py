@@ -459,6 +459,19 @@ async def stream_probe(request: web.Request) -> web.Response:
         upstream = {"ok": False, "url": "", "error": "This source is an uploaded video or GIF, so there is no RTSP or RTSPS stream to open."}
     else:
         upstream = {"ok": False, "url": "", "error": "The active source is not an RTSP or RTSPS stream."}
+    log.info(
+        "stream test camera=%s source=%s upstream_ok=%s upstream_codec=%s upstream_frames=%s upstream_error=%s published_ok=%s published_codec=%s published_frames=%s published_error=%s",
+        camera.id,
+        source.id if source else "none",
+        upstream.get("ok", False),
+        upstream.get("codec") or "unknown",
+        upstream.get("frames", 0),
+        upstream.get("error") or "none",
+        onvif.get("ok", False),
+        onvif.get("codec") or "unknown",
+        onvif.get("frames", 0),
+        onvif.get("error") or "none",
+    )
     return _json({"onvif": onvif, "source": upstream, "log": _camera_log(app, camera)})
 
 

@@ -19,6 +19,7 @@ class Settings:
     rtsp_port: int
     go2rtc_api_port: int
     poll_seconds: int
+    log_level: str
     ha_url: str
     ha_token: str
     supervisor: bool
@@ -89,6 +90,9 @@ def load_settings() -> Settings:
         ha_url = "http://supervisor/core"
     dev_default = "0" if supervisor else "1"
     go2rtc_bin = os.environ.get("GO2RTC_BIN") or str(merged.get("go2rtc_bin") or "")
+    log_level = str(merged.get("log_level") or "info").lower()
+    if log_level not in {"debug", "info", "warning", "error"}:
+        log_level = "info"
     return Settings(
         data_dir=data_dir,
         ui_port=_int(os.environ.get("HASP_UI_PORT") or merged.get("ui_port"), 8099),
@@ -96,6 +100,7 @@ def load_settings() -> Settings:
         rtsp_port=_int(os.environ.get("HASP_RTSP_PORT") or merged.get("rtsp_port"), 8554),
         go2rtc_api_port=_int(os.environ.get("HASP_GO2RTC_PORT") or merged.get("go2rtc_api_port"), 19841),
         poll_seconds=max(2, _int(merged.get("poll_seconds"), 5)),
+        log_level=log_level,
         ha_url=ha_url.rstrip("/"),
         ha_token=token,
         supervisor=supervisor,

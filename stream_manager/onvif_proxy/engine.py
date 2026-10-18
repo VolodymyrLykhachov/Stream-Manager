@@ -184,7 +184,14 @@ class Go2RtcEngine:
             self.recent.append(line)
             if "[rtsp] listen" in line and " ERR " in line:
                 self.error = f"RTSP port {self.rtsp_port} is used by another program, so no stream can play. Change rtsp_port in the add-on options."
-            level = logging.WARNING if any(tag in line for tag in (" WRN ", " ERR ", " FTL ", "error", "Error")) else logging.INFO
+            if any(tag in line for tag in (" FTL ", " ERR ", "Error", "error")):
+                level = logging.ERROR
+            elif any(tag in line for tag in (" WRN ", "warning", "Warning")):
+                level = logging.WARNING
+            elif " DBG " in line or "debug" in line.casefold():
+                level = logging.DEBUG
+            else:
+                level = logging.INFO
             stream_log.log(level, "%s", line)
         process.stdout.close()
 
@@ -248,6 +255,7 @@ class Go2RtcEngine:
             if "Connection refused" in body or body.startswith("<urlopen error"):
                 body = "The stream engine is not running, so this camera was saved but not published."
             self.error = body[:300] or f"engine HTTP {status}"
+            log.warning("stream %s update failed (HTTP %s): %s", name, status, redact(self.error))
             return self.error
         self._known.add(name)
         self._sources[name] = src

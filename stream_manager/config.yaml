@@ -1,5 +1,5 @@
 name: Stream Manager
-version: "1.0.19"
+version: "1.0.20"
 slug: stream_manager
 description: >-
   Smart ONVIF proxy for Home Assistant. Publish cameras, RTSP URLs, and
@@ -33,9 +33,11 @@ options:
   rtsp_port: 8554
   go2rtc_api_port: 19841
   poll_seconds: 5
+  log_level: info
 schema:
   ui_port: "int(1,65535)"
   onvif_port: "int(1,65535)"
   rtsp_port: "int(1,65535)"
   go2rtc_api_port: "int(1,65535)"
   poll_seconds: "int(2,120)"
+  log_level: "list(debug|info|warning|error)"

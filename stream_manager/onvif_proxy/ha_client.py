@@ -167,6 +167,7 @@ class HaClient:
             self.ws_connected = True
             self.connected = True
             self.error = ""
+            log.info("connected to Home Assistant websocket")
             reader = asyncio.create_task(self._read_loop(ws))
             try:
                 await self.ws_command({"type": "subscribe_events", "event_type": "state_changed"})
@@ -263,6 +264,7 @@ class HaClient:
             log.info("camera/stream failed for %s: %s", entity_id, exc)
             if not self.connected:
                 return Playback(None, "Home Assistant is not connected")
+            log.warning("using MJPEG fallback for camera %s after camera/stream failed", entity_id)
             return Playback("mjpeg", None, self.api_url(f"/api/camera_proxy_stream/{entity_id}"))
 
     def inject_states(self, updates: dict[str, str]) -> None:
