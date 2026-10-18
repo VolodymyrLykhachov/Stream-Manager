@@ -37,7 +37,7 @@ def build_app(settings: Settings | None = None) -> web.Application:
         if api_port != settings.go2rtc_api_port:
             log.warning("go2rtc API port %s is busy; using %s", settings.go2rtc_api_port, api_port)
             settings.go2rtc_api_port = api_port
-    engine = Go2RtcEngine(binary, settings.go2rtc_api_port, settings.rtsp_port, settings.data_dir)
+    engine = Go2RtcEngine(binary, settings.go2rtc_api_port, settings.rtsp_port, settings.data_dir, settings.log_level)
     ha = HaClient(settings.ha_url, settings.ha_token, settings.supervisor, settings.poll_seconds)
     streams = StreamManager(engine, settings.ui_port, settings.onvif_port, settings.rtsp_port, settings.data_dir)
     app["settings"] = settings

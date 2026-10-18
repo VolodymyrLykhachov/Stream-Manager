@@ -267,6 +267,12 @@ class DiscoveryTests(unittest.TestCase):
 
 
 class ProducerRestartTests(unittest.TestCase):
+    def test_go2rtc_receives_the_configured_log_level(self):
+        with tempfile.TemporaryDirectory() as folder:
+            engine = Go2RtcEngine("go2rtc", 1984, 8554, Path(folder), "debug")
+            config = engine.write_config()
+            self.assertIn("log:\n  level: debug", config.read_text(encoding="utf-8"))
+
     def test_needle_is_the_input_without_templates(self):
         self.assertEqual(source_needle("ffmpeg:rtsp://cam/live#input=sm1#video=sm2"), "rtsp://cam/live")
 

@@ -98,11 +98,12 @@ def child_commands(parent: int) -> list[tuple[int, str]]:
 
 
 class Go2RtcEngine:
-    def __init__(self, binary: str, api_port: int, rtsp_port: int, data_dir: Path) -> None:
+    def __init__(self, binary: str, api_port: int, rtsp_port: int, data_dir: Path, log_level: str = "info") -> None:
         self.binary = binary
         self.api_port = api_port
         self.rtsp_port = rtsp_port
         self.data_dir = data_dir
+        self.log_level = {"warning": "warn"}.get(log_level, log_level)
         self.process: subprocess.Popen | None = None
         self.running = False
         self.error = ""
@@ -135,7 +136,7 @@ class Go2RtcEngine:
                         for name, body in sorted(self.templates.items())
                     ],
                     "log:",
-                    "  level: info",
+                    f"  level: {self.log_level}",
                     "streams: {}",
                     "",
                 ]
